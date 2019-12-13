@@ -30,6 +30,15 @@ SELECT * FROM department;
 SELECT * FROM role;
 SELECT * FROM employee;
 
+INSERT INTO department (name)
+VALUES ("Sales"), ("Finance"), ("Legal"), ("Engineering");
+
+INSERT INTO role (title, salary, department_id)
+VALUES ("Sales Lead", 30000.00 , 1), ("Software engineer", 70000, 4), ("Accountant", 45000, 2), ("Lawyer", 100000, 3);
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Jane", "Doe" , 2 , 1), ("John", "Doe" , 3, 4), ("Voltaire", "Sarte" , 1, 2), ("Friedrich", "Foucault" , 4, 3);
+
 -- * **department**:
 
 --   * **id** - INT PRIMARY KEY
