@@ -1,26 +1,135 @@
 var inquirer = require("inquirer");
 // function which prompts the user for what action they should take
+
+
+
+// what to do?
+    // view all employees
+        // shows all the employees
+    // view all employees by dept
+        // sales
+        // financing
+        // engineering
+        // legal
+    // view all employees by manager
+    // add employee
+        // first name
+        // last name
+        // employee role
+        // employee manager
+            // gives list of all 
+    // remove employee
+        // shows all the employees
+    // update employee role
+        // sales lead
+        // salesperson
+        // lead engineer
+        // software engineer
+        // account manager
+        // accountant
+        // legal team lead
+        // lawyer
+
+    // update employee manager
+        // show all employees
+        // set the employee as the manger of someone else(removes the updated employee from the list)
+    // view all roles
+    // add role
+    // remove role
+// make sure there is a return line decribing the action has been done above
+
+
+
+
 function start() {
     inquirer
-      .prompt({
-        name: "postOrBid",
-        type: "list",
-        message: "Would you like to [POST] an auction or [BID] on an auction?",
-        choices: ["POST", "BID", "EXIT"]
-      })
-      .then(function(answer) {
-        // based on their answer, either call the bid or the post functions
-        if (answer.postOrBid === "POST") {
-          postAuction();
-        }
-        else if(answer.postOrBid === "BID") {
-          bidAuction();
-        } else{
-          connection.end();
-        }
-      });
-  }
+        .prompt({
+            name: "action",
+            type: "rawlist",
+            message: "What would you like to do?",
+            choices: [
+                "View all employees",
+                "View all employees by department",
+                "View all employees by manager",
+                "Add employee",
+                "Remove employee",
+                "Update employee role",
+                "Update employee manager",
+                "View all roles",
+                "Add role",
+                "Remove Role",
+                "Exit"]
+        })
+        .then(function (answer) {
+            switch (answer.action) {
+                case "View all employees":
+                    viewEmploys();
+                    break;
+
+                case "View all employees by department":
+                    viewEmployDept();
+                    break;
+
+                case "View all employees by manager":
+                    viewEmployMang();
+                    break;
+
+                case "Add employee":
+                    addEmploy();
+                    break;
+
+                case "Remove employee":
+                    removeEmploy();
+                    break;
+
+                case "Update employee role":
+                    updateEmployRole();
+                    break;
+
+                case "Update employee manager":
+                    updateEmployMang();
+                    break;
+
+                case "View all roles":
+                    viewRoles();
+                    break;
+
+                case "Add role":
+                    addRole();
+                    break;
+
+                case "Remove Role":
+                    removeRole();
+                    break;
+
+                case "Exit":
+                    exit();
+                    break;
+            }
+        });
+}
   
+function viewEmploys(){};
+
+function viewEmployDept(){};
+
+function viewEmployMang(){};
+
+function addEmploy(){};
+
+function removeEmploy(){};
+
+function updateEmployRole(){};
+
+function updateEmployMang(){};
+
+function viewRoles(){};
+
+function addRole(){};
+
+function removeRole(){};
+
+function exit(){};
   // function to handle posting new items up for auction
   function postAuction() {
     // prompt for info about the item being put up for auction
