@@ -34,11 +34,11 @@ var connection = mysql.createConnection({
                 "View all employees by manager",
                 "Add employee",
                 "Remove employee",
-                "Update employee role",
+                "Update employee position",
                 "Update employee manager",
-                "View all roles",
-                "Add role",
-                "Remove Role",
+                "View all Positions",
+                "Add position",
+                "Remove position",
                 "Exit"]
         })
         .then(function (answer) {
@@ -63,24 +63,24 @@ var connection = mysql.createConnection({
                     removeEmploy();
                     break;
 
-                case "Update employee role":
-                    updateEmployRole();
+                case "Update employee position":
+                    updateEmployPosition();
                     break;
 
                 case "Update employee manager":
                     updateEmployMang();
                     break;
 
-                case "View all roles":
-                    viewRoles();
+                case "View all Positions":
+                    viewPositions();
                     break;
 
-                case "Add role":
-                    addRole();
+                case "Add position":
+                    addPosition();
                     break;
 
-                case "Remove Role":
-                    removeRole();
+                case "Remove position":
+                    removePosition();
                     break;
 
                 case "Exit":
@@ -88,26 +88,154 @@ var connection = mysql.createConnection({
                     break;
             }
         });
-}
+};
   
-function viewEmploys(){};
+function viewEmploys(){
+  // function that show all employees mySQL
+  var query = "SELECT position, song, year FROM top5000 WHERE ?";
+      connection.query(query, [], function(err, res) {
+        if (err) throw err;
+      });
+};
 
-function viewEmployDept(){};
+function viewEmployDept(){
+  // function that show all employees by department mySQL
+  var query = "SELECT position, song, year FROM top5000 WHERE ?";
+      connection.query(query, [], function(err, res) {
+        if (err) throw err;
+      });
+};
 
-function viewEmployMang(){};
+function viewEmployMang(){
+  // function that show all employees by managment mySQL
+  var query = "SELECT position, song, year FROM top5000 WHERE ?";
+      connection.query(query, [], function(err, res) {
+        if (err) throw err;
+      });
+};
 
-function addEmploy(){};
+function addEmploy(){
+  inquirer
+  .prompt([
+    {
+      name: "first name",
+      type: "input",
+      message: "What is their first name?",
+    },
+    {
+      name: "last name",
+      type: "input",
+      message: "What is their last name?",
+    },
+    {
+      name: "position",
+      type: "list",
+      message: "What is their position?",
+      choices: [
+        "sales lead",
+        "salesperson",
+        "lead engineer",
+        "software engineer",
+        "account manager",
+        "accountant",
+        "legal team lead",
+        "lawyer"
+      ]
+    },
+    {
+      name: "manager",
+      type: "rawlist",
+      message: "Who manages this employee?",
+      choices: [
+      // function that returns all mangers
+      ]
+    },
 
-function removeEmploy(){};
+  ])
+  .then(function (answer) {
+    var query = "SELECT position, song, year FROM top5000 WHERE ?";
+    connection.query(query, [], function(err, res) {
+      if (err) throw err;
+    });
 
-function updateEmployRole(){};
+  });
+};
 
-function updateEmployMang(){};
+function removeEmploy(){
+  // function that removes employee from SQL
+  var query = "SELECT position, song, year FROM top5000 WHERE ?";
+      connection.query(query, [], function(err, res) {
+        if (err) throw err;
+      });
+};
 
-function viewRoles(){};
+function updateEmployRole(){
+  connection.query(
+      "UPDATE auctions SET ? WHERE ?",
+      [
+        {
+          highest_bid: answer.bid
+        },
+        {
+          id: chosenItem.id
+        }
+      ],
+      function(error) {
+        if (error) throw err;
+        console.log("Bid placed successfully!");
+        start();
+      }
+    );
+};
 
-function addRole(){};
+function updateEmployMang(){
+  connection.query(
+      "UPDATE auctions SET ? WHERE ?",
+      [
+        {
+          highest_bid: answer.bid
+        },
+        {
+          id: chosenItem.id
+        }
+      ],
+      function(error) {
+        if (error) throw err;
+        console.log("Bid placed successfully!");
+        start();
+      }
+    );
+};
 
-function removeRole(){};
+function viewPositions(){
+  var query = "SELECT position, song, year FROM top5000 WHERE ?";
+  connection.query(query, [], function(err, res) {
+    if (err) throw err;
+  });
+};
+
+function addPosition(){
+  inquirer
+  .prompt(
+    {
+      name: "add position",
+      type: "input",
+      message: "What is position would you like to add?",
+    }
+  )
+  .then(function (answer) {
+    var query = "SELECT position, song, year FROM top5000 WHERE ?";
+      connection.query(query, [], function(err, res) {
+        if (err) throw err;
+      });
+  });
+};
+
+function removePosition(){
+  var query = "SELECT position, song, year FROM top5000 WHERE ?";
+  connection.query(query, [], function(err, res) {
+    if (err) throw err;
+  });
+};
 
 function exit(){};

@@ -9,7 +9,7 @@ CREATE TABLE department(
   PRIMARY KEY (id)
 );
 
-CREATE TABLE role(
+CREATE TABLE position(
   id INT NOT NULL AUTO_INCREMENT,
   title VARCHAR(30) NOT NULL,
   salary DECIMAL(10,2) NULL
@@ -21,23 +21,23 @@ CREATE TABLE employee(
   id INT NOT NULL AUTO_INCREMENT,
   first_name VARCHAR(30) NOT NULL,
   last_name VARCHAR(30) NOT NULL,
-  role_id INT default 0,
-  manager_id INT default 0,
+  position_id INT default 0,
+  manager_id INT default NULL,
   PRIMARY KEY (id)
 );
 
 SELECT * FROM department;
-SELECT * FROM role;
+SELECT * FROM position;
 SELECT * FROM employee;
 
 INSERT INTO department (name)
 VALUES ("Sales"), ("Finance"), ("Legal"), ("Engineering");
 
-INSERT INTO role (title, salary, department_id)
+INSERT INTO position (title, salary, department_id)
 VALUES ("Sales Lead", 30000.00 , 1), ("Software engineer", 70000, 4), ("Accountant", 45000, 2), ("Lawyer", 100000, 3);
 
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Jane", "Doe" , 2 , 1), ("John", "Doe" , 3, 4), ("Voltaire", "Sarte" , 1, 2), ("Friedrich", "Foucault" , 4, 3);
+INSERT INTO employee (first_name, last_name, position_id, manager_id)
+VALUES ("Jane", "Doe" , 2 , 3), ("John", "Doe" , 3, null), ("Voltaire", "Sarte" , 1, 2), ("Friedrich", "Foucault" , 4, null);
 
 -- * **department**:
 
