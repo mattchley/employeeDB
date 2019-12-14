@@ -19,8 +19,19 @@ var connection = mysql.createConnection({
   connection.connect(function(err) {
     if (err) throw err;
     // run the start function after the connection is made to prompt the user
-    start();
+    // start();
+    test();
   });
+
+
+function test(){
+  var query = "SELECT * FROM employee INNER JOIN role ON role.id = employee.role_id INNER JOIN department ON department.id = role.department_id";
+  connection.query(query, function(err, res) {
+    if (err) throw err;
+    console.log(res)
+  });
+  
+};
 
   function start() {
     inquirer

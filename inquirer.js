@@ -108,10 +108,11 @@ function start() {
             }
         });
 };
-  
+
+
 function viewEmploys(){
   // function that show all employees mySQL
-  var query = "SELECT position, song, year FROM top5000 WHERE ?";
+  var query = "SELECT * FROM  WHERE ?";
       connection.query(query, [], function(err, res) {
         if (err) throw err;
       });
@@ -167,6 +168,7 @@ function addEmploy(){
       message: "Who manages this employee?",
       choices: [
       // function that returns all mangers
+      // /Users/matthewatchley/Desktop/UCSD-SD-FSF-PT-09-2019-U-C/12-MySQL/01-Activities/10-GreatBay/Solved/greatBayBasic.js activity has a way to return functions as answers
       ]
     },
 
