@@ -106,9 +106,14 @@ How do you deliver this? Here are some guidelines:
 
   * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
 
-PseudoCode
-Inquierer JS
-Schema MySQL
-    find a way to join them
-Server js
-CRUD framework from activities
+## PseudoCode
+
+* Inquierer JS (x)
+
+* Schema MySQL
+    find a way to join them (x)
+
+* Server js (x)
+
+* CRUD framework from activities
+  write out all the MySQL Commands
