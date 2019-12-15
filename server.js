@@ -20,8 +20,8 @@ connection.connect(function (err) {
   if (err) throw err;
   // run the start function after the connection is made to prompt the user
   // start();
-  // viewEmployDept();
-  test();
+ 
+  // test();
 });
 
 // inquirer functions
@@ -215,7 +215,7 @@ function exit() { };
 
 // mysql functions
 // =====================================================
-
+// works
 function test() {
   var query = `SELECT * FROM ((employee INNER JOIN role ON role.id = employee.role_id) INNER JOIN department ON department.id = role.department_id)`;
   connection.query(query, function (err, res) {
@@ -224,7 +224,7 @@ function test() {
   });
 
 };
-
+// needs formatting
 function viewEmploys() {
   // function that show all employees mySQL
   var query = `SELECT * FROM ((employee INNER JOIN role ON role.id = employee.role_id) INNER JOIN department ON department.id = role.department_id)`;
@@ -233,34 +233,36 @@ function viewEmploys() {
     console.log(res)
   });
 };
-
+// still need to add inquirer funct
 function viewEmployDept() {
   // function that show all employees by department mySQL
-  var query = `SELECT * FROM ((department INNER JOIN role ON role.id = department.id) INNER JOIN employee ON employee.role_id= role.id) where name = "Finance" `;
+  var query = `SELECT * FROM ((department INNER JOIN role ON role.id = department.id) INNER JOIN employee ON employee.role_id= role.id) WHERE name = "Finance" `;
   connection.query(query, [], function (err, res) {
     if (err) throw err;
     console.log(res)
   });
 };
-
+ // i think the manager_id is the problem
 function viewEmployMang() {
   // function that show all employees by managment mySQL
-  var query = "By manger_id";
+ 
+  var query = `SELECT * FROM employee BY manager_id = "3"`;
   connection.query(query, [], function (err, res) {
     if (err) throw err;
   });
 };
-
+// works need to add inquirer funct
 function addEmploy() {
-  var query = "INSERT INTO employee (first_name, last_name, role_id, manager_id)";
+  var query = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ( 'matt', 'atchley', 2, null )`;
   connection.query(query,
-    [{ first_name: answer.firstName },
-    { last_name: answer.lastName },
-    { role: answer.role },
-    { manager_id: answer.manager }]
+   [ ]
     , function (err, res) {
       if (err) throw err;
-      console.log(answer.firstName + answer.lastName + "has been added!")
+      console.log(query+ "has been added!")
+      // [{ first_name: answer.firstName },
+      //   { last_name: answer.lastName },
+      //   { role: answer.role },
+      //   { manager_id: answer.manager }
     });
 }
 
@@ -271,13 +273,14 @@ function removeEmploy() {
     if (err) throw err;
   });
 };
-
+// works need to add inquirer funct
 function addRole() {
 
-  var query = "INSERT INTO role (title, salary, department_id)";
-  connection.query(query, [{ title: answer.newRole }, { salary: answer.amount }, { department_id: answer.department }], function (err, res) {
+  var query = `INSERT INTO role (title, salary, department_id) VALUES ('CEO', 1000000, 1 )`;
+  connection.query(query, [], function (err, res) {
     if (err) throw err;
-    console.log(answer.newRole + "has been added!")
+    console.log(query + "has been added!")
+    // { title: answer.newRole }, { salary: answer.amount }, { department_id: answer.department }
   });
 };
 
