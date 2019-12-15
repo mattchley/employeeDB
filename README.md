@@ -116,4 +116,10 @@ How do you deliver this? Here are some guidelines:
 * Server js (x)
 
 * CRUD framework from activities
-  write out all the MySQL Commands
+  write out all the MySQL Commands(x)
+
+* connect inquirer with mySQL
+
+* fix manager_id 
+
+* format data render
