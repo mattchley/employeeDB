@@ -20,7 +20,7 @@ connection.connect(function (err) {
   if (err) throw err;
   // run the start function after the connection is made to prompt the user
   // start();
- 
+
   // test();
 });
 
@@ -265,12 +265,13 @@ function addEmploy() {
       //   { manager_id: answer.manager }
     });
 }
-
+// works need to add inquirer funct
 function removeEmploy() {
   // function that removes employee from SQL
-  var query = "SELECT role, song, year FROM top5000 WHERE ?";
+  var query = `DELETE FROM employee WHERE first_name = "matt"`;
   connection.query(query, [], function (err, res) {
     if (err) throw err;
+    console.log(query);
   });
 };
 // works need to add inquirer funct
@@ -283,10 +284,11 @@ function addRole() {
     // { title: answer.newRole }, { salary: answer.amount }, { department_id: answer.department }
   });
 };
-
+// works need to add inquirer funct
 function removeRole() {
-  var query = "SELECT role, song, year FROM top5000 WHERE ?";
+  var query = `DELETE FROM role WHERE title = "CEO"`;
   connection.query(query, [], function (err, res) {
     if (err) throw err;
+    console.log(query);
   });
 };
