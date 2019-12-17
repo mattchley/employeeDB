@@ -20,7 +20,7 @@ connection.connect(function (err) {
   if (err) throw err;
   // run the start function after the connection is made to prompt the user
   // start();
-
+  returnRoles();
   // test();
 });
 
@@ -113,14 +113,6 @@ function inqAddEmploy() {
         type: "input",
         message: "What is their role?",
         // choices: [
-        //   "sales lead",
-        //   "salesperson",
-        //   "lead engineer",
-        //   "software engineer",
-        //   "account manager",
-        //   "accountant",
-        //   "legal team lead",
-        //   "lawyer"
         // ]
       },
       {
@@ -141,6 +133,157 @@ function inqAddEmploy() {
 
 function inqRemoveEmploy() { };
 
+
+function inqUpdateEmployRole() {
+  connection.query(
+    "UPDATE auctions SET ? WHERE ?",
+    [
+      {
+        highest_bid: answer.bid
+      },
+      {
+        id: chosenItem.id
+      }
+    ],
+    function (error) {
+      if (error) throw err;
+      console.log("Bid placed successfully!");
+      start();
+    }
+  );
+};
+
+function inqUpdateEmployMang() {
+  connection.query(
+    "UPDATE auctions SET ? WHERE ?",
+    [
+      {
+        highest_bid: answer.bid
+      },
+      {
+        id: chosenItem.id
+      }
+    ],
+    function (error) {
+      if (error) throw err;
+      console.log("Bid placed successfully!");
+      start();
+    }
+  );
+};
+
+function inqViewRoles() {
+  var query = "SELECT role, song, year FROM top5000 WHERE ?";
+  connection.query(query, [], function (err, res) {
+    if (err) throw err;
+  });
+};
+
+function inqAddRole() {
+  inquirer
+    .prompt([
+      {
+        name: "newRole",
+        type: "input",
+        message: "What is role would you like to add?",
+      },
+      {
+        name: "amount",
+        type: "input",
+        message: "How much do they make?",
+      },
+      {
+        name: "department",
+        type: "input",
+        message: "Which department do they belong to?",
+      },
+    ])
+    .then(function (answer) { });
+};
+
+function inqRemoveRole() { };
+
+function exit() { };
+
+// mysql functions
+// =====================================================
+// works
+function test() {
+  var query = `SELECT * FROM ((employee INNER JOIN role ON role.id = employee.role_id) INNER JOIN department ON department.id = role.department_id)`;
+  connection.query(query, function (err, res) {
+    if (err) throw err;
+    console.log(res)
+  });
+
+};
+// needs formatting
+function viewEmploys() {
+  // function that show all employees mySQL
+  var query = `SELECT * FROM ((employee INNER JOIN role ON role.id = employee.role_id) INNER JOIN department ON department.id = role.department_id)`;
+  connection.query(query, [], function (err, res) {
+    if (err) throw err;
+    console.log(res)
+  });
+};
+// still need to add inquirer funct
+function viewEmployDept() {
+  // function that show all employees by department mySQL
+  var query = `SELECT * FROM ((department INNER JOIN role ON role.id = department.id) INNER JOIN employee ON employee.role_id= role.id) WHERE name = "Finance" `;
+  connection.query(query, [], function (err, res) {
+    if (err) throw err;
+    console.log(res)
+  });
+};
+// i think the manager_id is the problem
+function viewEmployMang() {
+  // function that show all employees by managment mySQL
+
+  var query = `SELECT * FROM employee BY manager_id = "3"`;
+  connection.query(query, [], function (err, res) {
+    if (err) throw err;
+  });
+};
+// works need to add inquirer funct
+function addEmploy() {
+  var query = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ( 'matt', 'atchley', 2, null )`;
+  connection.query(query,
+    []
+    , function (err, res) {
+      if (err) throw err;
+      console.log(query + "has been added!")
+      // [{ first_name: answer.firstName },
+      //   { last_name: answer.lastName },
+      //   { role: answer.role },
+      //   { manager_id: answer.manager }
+    });
+}
+// works need to add inquirer funct
+function removeEmploy() {
+  // function that removes employee from SQL
+  var query = `DELETE FROM employee WHERE first_name = "matt"`;
+  connection.query(query, [], function (err, res) {
+    if (err) throw err;
+    console.log(query);
+  });
+};
+// works need to add inquirer funct
+function addRole() {
+
+  var query = `INSERT INTO role (title, salary, department_id) VALUES ('CEO', 1000000, 1 )`;
+  connection.query(query, [], function (err, res) {
+    if (err) throw err;
+    console.log(query + "has been added!")
+    // { title: answer.newRole }, { salary: answer.amount }, { department_id: answer.department }
+  });
+};
+// works need to add inquirer funct
+function removeRole() {
+  var query = `DELETE FROM role WHERE title = "CEO"`;
+  connection.query(query, [], function (err, res) {
+    if (err) throw err;
+    console.log(query);
+  });
+};
 
 function updateEmployRole() {
   connection.query(
@@ -187,108 +330,100 @@ function viewRoles() {
   });
 };
 
-function inqAddrole() {
-  inquirer
-  .prompt([
-    {
-      name: "newRole",
-      type: "input",
-      message: "What is role would you like to add?",
-    },
-    {
-      name: "amount",
-      type: "input",
-      message: "How much do they make?",
-    },
-    {
-      name: "department",
-      type: "input",
-      message: "Which department do they belong to?",
-    },
-  ])
-  .then(function (answer) {});
-};
-
-function inqRemoveRole() {};
-
-function exit() { };
-
-// mysql functions
-// =====================================================
-// works
-function test() {
-  var query = `SELECT * FROM ((employee INNER JOIN role ON role.id = employee.role_id) INNER JOIN department ON department.id = role.department_id)`;
-  connection.query(query, function (err, res) {
+function returnRolestest() {
+  connection.query("SELECT title FROM role", function (err, res) {
     if (err) throw err;
-    console.log(res)
-  });
 
+    function test() {
+      var choiceArray = [];
+      for (var i = 0; i < returnedTitles.length; i++) {
+        choiceArray.push(returnedTitles[i].item_name);
+      }
+      console.log(choiceArray);
+    }
+    test(res);
+    // return choiceArray;
+
+    // inquirer
+    //   .prompt({
+    //     name: "choice",
+    //     type: "rawlist",
+    //     choices: function () {
+    //       var choiceArray = [];
+    //       for (var i = 0; i < res.length; i++) {
+    //         choiceArray.push(res[i].item_name);
+    //       }
+    //       return choiceArray;
+    //     },
+    //     message: "What would you like to do?",
+    //   })
+    //   .then(function (answer) {
+    //     console.log(answer)
+    //   });
+  });
 };
-// needs formatting
-function viewEmploys() {
-  // function that show all employees mySQL
-  var query = `SELECT * FROM ((employee INNER JOIN role ON role.id = employee.role_id) INNER JOIN department ON department.id = role.department_id)`;
-  connection.query(query, [], function (err, res) {
+
+function returnEmployees() {
+  connection.query("SELECT * FROM employee", function (err, res) {
     if (err) throw err;
     console.log(res)
   });
 };
-// still need to add inquirer funct
-function viewEmployDept() {
-  // function that show all employees by department mySQL
-  var query = `SELECT * FROM ((department INNER JOIN role ON role.id = department.id) INNER JOIN employee ON employee.role_id= role.id) WHERE name = "Finance" `;
-  connection.query(query, [], function (err, res) {
+
+function returnRoles() {
+  // query the database for all items being auctioned
+  connection.query("SELECT * FROM employee", function (err, results) {
     if (err) throw err;
-    console.log(res)
+    // once you have the items, prompt the user for which they'd like to bid on
+    inquirer
+      .prompt([
+        {
+          name: "choice",
+          type: "list",
+          choices: function () {
+            var choiceArray = [];
+            for (var i = 0; i < results.length; i++) {
+              choiceArray.push(results[i].item_name);
+            }
+            return choiceArray;
+          },
+          message: "What role do you want to choose?"
+        }
+      ])
+      .then(function (answer) {
+        // get the information of the chosen item
+        var chosenItem;
+        for (var i = 0; i < results.length; i++) {
+          if (results[i].item_name === answer.choice) {
+            chosenItem = results[i];
+          }
+        }
+
+        // determine if bid was high enough
+        if (chosenItem.highest_bid < parseInt(answer.bid)) {
+          // bid was high enough, so update db, let the user know, and start over
+          connection.query(
+            "UPDATE auctions SET ? WHERE ?",
+            [
+              {
+                highest_bid: answer.bid
+              },
+              {
+                id: chosenItem.id
+              }
+            ],
+            function (error) {
+              if (error) throw err;
+              console.log("Bid placed successfully!");
+              start();
+            }
+          );
+        }
+        else {
+          // bid wasn't high enough, so apologize and start over
+          console.log("Your bid was too low. Try again...");
+          start();
+        }
+      });
   });
-};
- // i think the manager_id is the problem
-function viewEmployMang() {
-  // function that show all employees by managment mySQL
- 
-  var query = `SELECT * FROM employee BY manager_id = "3"`;
-  connection.query(query, [], function (err, res) {
-    if (err) throw err;
-  });
-};
-// works need to add inquirer funct
-function addEmploy() {
-  var query = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ( 'matt', 'atchley', 2, null )`;
-  connection.query(query,
-   [ ]
-    , function (err, res) {
-      if (err) throw err;
-      console.log(query+ "has been added!")
-      // [{ first_name: answer.firstName },
-      //   { last_name: answer.lastName },
-      //   { role: answer.role },
-      //   { manager_id: answer.manager }
-    });
 }
-// works need to add inquirer funct
-function removeEmploy() {
-  // function that removes employee from SQL
-  var query = `DELETE FROM employee WHERE first_name = "matt"`;
-  connection.query(query, [], function (err, res) {
-    if (err) throw err;
-    console.log(query);
-  });
-};
-// works need to add inquirer funct
-function addRole() {
-
-  var query = `INSERT INTO role (title, salary, department_id) VALUES ('CEO', 1000000, 1 )`;
-  connection.query(query, [], function (err, res) {
-    if (err) throw err;
-    console.log(query + "has been added!")
-    // { title: answer.newRole }, { salary: answer.amount }, { department_id: answer.department }
-  });
-};
-// works need to add inquirer funct
-function removeRole() {
-  var query = `DELETE FROM role WHERE title = "CEO"`;
-  connection.query(query, [], function (err, res) {
-    if (err) throw err;
-    console.log(query);
-  });
-};

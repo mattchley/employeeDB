@@ -50,6 +50,10 @@ VALUES ("Jane", "Doe" , 2 , 3), ("John", "Doe" , 3, null), ("Voltaire", "Sarte" 
 
 `UPDATE employee SET manager_id = '?' WHERE employee.id =''`;
 
+-- connect manager_id to name
+
+`SELECT CustomerID AS ID, CustomerName AS Customer FROM Customers`;
+
 -- * **department**:
 
 --   * **id** - INT PRIMARY KEY
