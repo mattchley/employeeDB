@@ -19,8 +19,7 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
   if (err) throw err;
   // run the start function after the connection is made to prompt the user
-  // start();
-  inqViewDep();
+  start();
 });
 
 // inquirer functions
@@ -192,55 +191,68 @@ function inqAddRole() {
 // remove inquirers
 // =====================================================
 function inqRemoveRole() {
-  inquirer
-    .prompt([
-
-      {
-        name: "removeRole",
-        type: "rawlist",
-        message: "What role would you like to remove?",
-        // choices: [
-        // ]
-      }
-
-    ])
-    .then(function (answer) {
-      var query = `DELETE FROM role WHERE ?`;
-      connection.query(query, {
-        title: answer.removeRole
-      }, function (err, res) {
-        if (err) throw err;
-        console.log(answer.removeRole + " has been removed");
-        start();
+  connection.query("SELECT * FROM role", function (err, results) {
+    if (err) throw err;
+    inquirer
+      .prompt([
+        {
+          name: "choice",
+          type: "rawlist",
+          choices: function () {
+            var choiceArray = [];
+            for (var i = 0; i < results.length; i++) {
+              choiceArray.push(results[i].title);
+            }
+            return choiceArray;
+          },
+          message: "Which role would you like to remove?"
+        }
+      ])
+      .then(function (answer) {
+        var query = `DELETE FROM role WHERE ?`;
+        connection.query(query, {
+          title: answer.removeRole
+        }, function (err, res) {
+          if (err) throw err;
+          console.log(answer.removeRole + " has been removed");
+          start();
+        });
       });
-    });
+  });
 };
 
 function inqRemoveEmploy() {
-  inquirer
-    .prompt([
+  connection.query("SELECT * FROM employee", function (err, results) {
+    if (err) throw err;
+    // once you have the items, prompt the user for which they'd like to bid on
+    inquirer
+      .prompt([
+        {
+          name: "choice",
+          type: "rawlist",
+          choices: function () {
+            var choiceArray = [];
+            for (var i = 0; i < results.length; i++) {
+              choiceArray.push(results[i].first_name + " " + results[i].last_name);
+            }
+            return choiceArray;
+          },
+          message: "Which employee?"
+        }
+      ])
+      .then(function (answer) {
+        var query = `DELETE FROM employee WHERE ?`;
+        connection.query(query, {
+          first_name: answer.removeEmployee,
+        }, function (err, res) {
+          if (err) throw err;
+          console.log(answer.removeEmploy + " has been removed");
+          start();
+        });
 
-      {
-        name: "removeEmployee",
-        type: "rawlist",
-        message: "Which employee would you like to remove?",
-        // choices: [
-        // ]
-      }
-
-    ])
-    .then(function (answer) {
-      var query = `DELETE FROM employee WHERE ?`;
-      connection.query(query, {
-        first_name: answer.removeEmployee,
-      }, function (err, res) {
-        if (err) throw err;
-        console.log(answer.removeEmploy + " has been removed");
-        start();
       });
-
-    });
-}
+  })
+};
 
 // update inquirers
 // =====================================================
@@ -350,7 +362,7 @@ function inqViewDep() {
       .then(function (answer) {
         var query = `SELECT * FROM ((department INNER JOIN role ON role.id = department.id) INNER JOIN employee ON employee.role_id= role.id) WHERE ? `;
         connection.query(query, {
-         name : answer.choice
+          name: answer.choice
         }, function (err, res) {
           if (err) throw err;
           console.log(res)
@@ -376,7 +388,7 @@ function inqViewMang() {
     .then(function (answer) {
       var query = `SELECT * FROM employee BY ?`;
       connection.query(query, {
-       manager_id : answer.viewManger
+        manager_id: answer.viewManger
       }, function (err, res) {
         if (err) throw err;
         console.log(res)
@@ -411,5 +423,33 @@ function viewRoles() {
 }
 
 
+// view
+// =====================================================
+function exit() {
+  connection.end()
+}
 
-
+function returnEmployees() {
+  connection.query("SELECT * FROM employee", function (err, results) {
+    if (err) throw err;
+    // once you have the items, prompt the user for which they'd like to bid on
+    inquirer
+      .prompt([
+        {
+          name: "choice",
+          type: "rawlist",
+          choices: function () {
+            var choiceArray = [];
+            for (var i = 0; i < results.length; i++) {
+              choiceArray.push(results[i].first_name + " " + results[i].last_name);
+            }
+            return choiceArray;
+          },
+          message: "Which employee?"
+        }
+      ])
+      .then(function (answer) {
+        console.log(answer)
+      })
+  })
+};
