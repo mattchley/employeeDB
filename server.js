@@ -20,190 +20,14 @@ connection.connect(function (err) {
   if (err) throw err;
   // run the start function after the connection is made to prompt the user
   // start();
-  returnRoles();
+  viewEmploys();
   // test();
 });
 
 // inquirer functions
 // =====================================================
 
-function start() {
-  inquirer
-    .prompt({
-      name: "action",
-      type: "rawlist",
-      message: "What would you like to do?",
-      choices: [
-        "View all employees",
-        "View all employees by department",
-        "View all employees by manager",
-        "Add employee",
-        "Remove employee",
-        "Update employee role",
-        "Update employee manager",
-        "View all roles",
-        "Add role",
-        "Remove role",
-        "Exit"]
-    })
-    .then(function (answer) {
-      switch (answer.action) {
-        case "View all employees":
-          viewEmploys();
-          break;
-
-        case "View all employees by department":
-          viewEmployDept();
-          break;
-
-        case "View all employees by manager":
-          viewEmployMang();
-          break;
-
-        case "Add employee":
-          inqAddEmploy();
-          break;
-
-        case "Remove employee":
-          inqRemoveEmploy();
-          break;
-
-        case "Update employee role":
-          updateEmployrole();
-          break;
-
-        case "Update employee manager":
-          updateEmployMang();
-          break;
-
-        case "View all roles":
-          viewroles();
-          break;
-
-        case "Add role":
-          inqAddrole();
-          break;
-
-        case "Remove role":
-          inqRemoveRole();
-          break;
-
-        case "Exit":
-          exit();
-          break;
-      }
-    });
-};
-
-function inqAddEmploy() {
-  inquirer
-    .prompt([
-      {
-        name: "firstName",
-        type: "input",
-        message: "What is their first name?",
-      },
-      {
-        name: "lastName",
-        type: "input",
-        message: "What is their last name?",
-      },
-      {
-        name: "role",
-        type: "input",
-        message: "What is their role?",
-        // choices: [
-        // ]
-      },
-      {
-        name: "manager",
-        type: "input",
-        message: "Who manages this employee?",
-        // choices: [
-        //   // function that returns all mangers
-        // ]
-      },
-
-    ])
-    .then(function (answer) {
-
-
-    });
-};
-
-function inqRemoveEmploy() { };
-
-
-function inqUpdateEmployRole() {
-  connection.query(
-    "UPDATE auctions SET ? WHERE ?",
-    [
-      {
-        highest_bid: answer.bid
-      },
-      {
-        id: chosenItem.id
-      }
-    ],
-    function (error) {
-      if (error) throw err;
-      console.log("Bid placed successfully!");
-      start();
-    }
-  );
-};
-
-function inqUpdateEmployMang() {
-  connection.query(
-    "UPDATE auctions SET ? WHERE ?",
-    [
-      {
-        highest_bid: answer.bid
-      },
-      {
-        id: chosenItem.id
-      }
-    ],
-    function (error) {
-      if (error) throw err;
-      console.log("Bid placed successfully!");
-      start();
-    }
-  );
-};
-
-function inqViewRoles() {
-  var query = "SELECT role, song, year FROM top5000 WHERE ?";
-  connection.query(query, [], function (err, res) {
-    if (err) throw err;
-  });
-};
-
-function inqAddRole() {
-  inquirer
-    .prompt([
-      {
-        name: "newRole",
-        type: "input",
-        message: "What is role would you like to add?",
-      },
-      {
-        name: "amount",
-        type: "input",
-        message: "How much do they make?",
-      },
-      {
-        name: "department",
-        type: "input",
-        message: "Which department do they belong to?",
-      },
-    ])
-    .then(function (answer) { });
-};
-
-function inqRemoveRole() { };
-
-function exit() { };
+// inquirer.js data here
 
 // mysql functions
 // =====================================================
@@ -216,6 +40,10 @@ function test() {
   });
 
 };
+
+
+// view
+// =====================================================
 // needs formatting
 function viewEmploys() {
   // function that show all employees mySQL
@@ -243,6 +71,17 @@ function viewEmployMang() {
     if (err) throw err;
   });
 };
+// still need to add inquirer funct
+function viewRoles() {
+  var query = "SELECT * FROM role";
+  connection.query(query, [], function (err, res) {
+    if (err) throw err;
+  });
+};
+
+
+// add
+// =====================================================
 // works need to add inquirer funct
 function addEmploy() {
   var query = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ( 'matt', 'atchley', 2, null )`;
@@ -258,15 +97,6 @@ function addEmploy() {
     });
 }
 // works need to add inquirer funct
-function removeEmploy() {
-  // function that removes employee from SQL
-  var query = `DELETE FROM employee WHERE first_name = "matt"`;
-  connection.query(query, [], function (err, res) {
-    if (err) throw err;
-    console.log(query);
-  });
-};
-// works need to add inquirer funct
 function addRole() {
 
   var query = `INSERT INTO role (title, salary, department_id) VALUES ('CEO', 1000000, 1 )`;
@@ -274,6 +104,19 @@ function addRole() {
     if (err) throw err;
     console.log(query + "has been added!")
     // { title: answer.newRole }, { salary: answer.amount }, { department_id: answer.department }
+  });
+};
+
+
+// remove
+// =====================================================
+// works need to add inquirer funct
+function removeEmploy() {
+  // function that removes employee from SQL
+  var query = `DELETE FROM employee WHERE first_name = "matt"`;
+  connection.query(query, [], function (err, res) {
+    if (err) throw err;
+    console.log(query);
   });
 };
 // works need to add inquirer funct
@@ -285,20 +128,23 @@ function removeRole() {
   });
 };
 
+
+// update
+// =====================================================
 function updateEmployRole() {
   connection.query(
-    "UPDATE auctions SET ? WHERE ?",
+    "UPDATE employee SET role_id = ? WHERE id = ?",
     [
       {
-        highest_bid: answer.bid
+        role_id: answer.updateRole
       },
       {
-        id: chosenItem.id
+        id: answer.updateEmployee
       }
     ],
     function (error) {
       if (error) throw err;
-      console.log("Bid placed successfully!");
+      console.log("Role successfully changed!");
       start();
     }
   );
@@ -306,30 +152,26 @@ function updateEmployRole() {
 
 function updateEmployMang() {
   connection.query(
-    "UPDATE auctions SET ? WHERE ?",
+    "UPDATE employee SET manager_id = ? WHERE id = ?",
     [
       {
-        highest_bid: answer.bid
+        role_id: answer.updateMang
       },
       {
-        id: chosenItem.id
+        id: answer.updateEmployee
       }
     ],
     function (error) {
       if (error) throw err;
-      console.log("Bid placed successfully!");
+      console.log("Manager successfully changed!");
       start();
     }
   );
 };
 
-function viewRoles() {
-  var query = "SELECT role, song, year FROM top5000 WHERE ?";
-  connection.query(query, [], function (err, res) {
-    if (err) throw err;
-  });
-};
 
+// returns for inquirer (needs the most work)
+// =====================================================
 function returnRolestest() {
   connection.query("SELECT title FROM role", function (err, res) {
     if (err) throw err;

@@ -39,20 +39,6 @@ VALUES ("Sales Lead", 30000.00 , 1), ("Software engineer", 70000, 4), ("Accounta
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Jane", "Doe" , 2 , 3), ("John", "Doe" , 3, null), ("Voltaire", "Sarte" , 1, 2), ("Friedrich", "Foucault" , 4, null);
 
--- 3 table join
-`SELECT * FROM ((employee INNER JOIN role ON role.id = employee.role_id) INNER JOIN department ON department.id = role.department_id)`
-
--- update role info
-
-`UPDATE employee SET role_id = '?' WHERE employee.id =''`;
-
--- update manager info
-
-`UPDATE employee SET manager_id = '?' WHERE employee.id =''`;
-
--- connect manager_id to name
-
-`SELECT CustomerID AS ID, CustomerName AS Customer FROM Customers`;
 
 -- * **department**:
 
