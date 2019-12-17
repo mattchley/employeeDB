@@ -20,26 +20,300 @@ connection.connect(function (err) {
   if (err) throw err;
   // run the start function after the connection is made to prompt the user
   // start();
-  viewEmploys();
-  // test();
+  test();
 });
 
 // inquirer functions
 // =====================================================
 
-// inquirer.js data here
+// beginning tree
+// =====================================================
+function start() {
+  inquirer
+    .prompt({
+      name: "action",
+      type: "rawlist",
+      message: "What would you like to do?",
+      choices: [
+        "View all employees",
+        "View all employees by department",
+        "View all employees by manager",
+        "Add employee",
+        "Remove employee",
+        "Update employee role",
+        "Update employee manager",
+        "View all roles",
+        "Add role",
+        "Remove role",
+        "Exit"]
+    })
+    .then(function (answer) {
+      switch (answer.action) {
+        case "View all employees":
+          // returns data
+          viewEmploys();
+          break;
+
+        case "View all employees by department":
+          // needs inquirer by which department
+          inqViewDep();
+          break;
+
+        case "View all employees by manager":
+          // needs inquirer by which manager
+          inqViewMang();
+          break;
+
+        case "Add employee":
+          // needs inquirer to ask info
+          inqAddEmploy();
+          break;
+
+        case "Remove employee":
+          // needs inquiere to ask info
+          inqRemoveEmploy();
+          break;
+
+        case "Update employee role":
+          // reutrns update message is a PUT
+          inqUpdateEmployRole();
+          break;
+
+        case "Update employee manager":
+          // returns update messge is a PUT
+          inqUpdateEmployMang();
+          break;
+
+        case "View all roles":
+          // returns data
+          viewroles();
+          break;
+
+        case "Add role":
+          // needs inquirer to ask info
+          inqAddRole();
+          break;
+
+        case "Remove role":
+          // needs inquirer to ask info
+          inqRemoveRole();
+          break;
+
+        case "Exit":
+          // needs SQL to end connection
+          exit();
+          break;
+      }
+    });
+};
+
+// add inquirers
+// =====================================================
+function inqAddEmploy() {
+  inquirer
+    .prompt([
+      {
+        name: "firstName",
+        type: "input",
+        message: "What is their first name?",
+      },
+      {
+        name: "lastName",
+        type: "input",
+        message: "What is their last name?",
+      },
+      {
+        name: "role",
+        type: "input",
+        message: "What is their role?",
+        // choices: [
+        // ]
+      },
+      {
+        name: "manager",
+        type: "input",
+        message: "Who manages this employee?",
+        // choices: [
+        //   // function that returns all mangers
+        // ]
+      },
+
+    ])
+    .then(function (answer) {
+
+
+    });
+};
+
+function inqAddRole() {
+  inquirer
+    .prompt([
+      {
+        name: "newRole",
+        type: "input",
+        message: "What is role would you like to add?",
+      },
+      {
+        name: "amount",
+        type: "input",
+        message: "How much do they make?",
+      },
+      {
+        name: "department",
+        type: "input",
+        message: "Which department do they belong to?",
+      },
+    ])
+    .then(function (answer) { });
+};
+
+// remove inquirers
+// =====================================================
+function inqRemoveRole() { 
+  inquirer
+    .prompt([
+
+      {
+        name: "removeRole",
+        type: "rawlist",
+        message: "What role would you like to remove?",
+        // choices: [
+        // ]
+      }
+
+    ])
+    .then(function (answer) {
+
+
+    });
+};
+
+function inqRemoveEmploy() { 
+  inquirer
+    .prompt([
+
+      {
+        name: "removeEmployee",
+        type: "rawlist",
+        message: "Which employee would you like to remove?",
+        // choices: [
+        // ]
+      }
+
+    ])
+    .then(function (answer) {
+
+
+    });
+}
+
+// update inquirers
+// =====================================================
+function inqUpdateEmployRole() {
+  inquirer
+    .prompt([
+
+      {
+        name: "updateEmployee",
+        type: "rawlist",
+        message: "Which employee would you like to update?",
+        // choices: [
+        // ]
+      },
+      {
+        name: "updateRole",
+        type: "rawlist",
+        message: "What is there role?",
+        // choices: [
+        // ]
+      }     
+
+    ])
+    .then(function (answer) {
+
+
+    });
+};
+
+function inqUpdateEmployMang() {
+  inquirer
+    .prompt([
+
+      {
+        name: "updateEmployee",
+        type: "rawlist",
+        message: "Which employee would you like to update?",
+        // choices: [
+        // ]
+      },
+      {
+        name: "updateManger",
+        type: "rawlist",
+        message: "Who is their manager?",
+        // choices: [
+        // ]
+      }     
+
+    ])
+    .then(function (answer) {
+
+
+    });
+};
+
+// view inquirers
+// =====================================================
+function inqViewDep() {
+
+  
+  inquirer
+    .prompt([
+
+      {
+        name: "viewDepartment",
+        type: "rawlist",
+        message: "What department would you like to view?",
+        // choices: [
+        // ]
+      }
+
+    ])
+    .then(function (answer) {
+
+
+    });
+};
+
+function inqViewMang() {
+  inquirer
+    .prompt([
+
+      {
+        name: "viewManger",
+        type: "rawlist",
+        message: "What manger would you like to view?",
+        // choices: [
+        // ]
+      }
+
+    ])
+    .then(function (answer) {
+
+
+    });
+};
 
 // mysql functions
 // =====================================================
 // works
-function test() {
-  var query = `SELECT * FROM ((employee INNER JOIN role ON role.id = employee.role_id) INNER JOIN department ON department.id = role.department_id)`;
-  connection.query(query, function (err, res) {
-    if (err) throw err;
-    console.log(res)
-  });
+// function test() {
+//   var query = `SELECT * FROM ((employee INNER JOIN role ON role.id = employee.role_id) INNER JOIN department ON department.id = role.department_id)`;
+//   connection.query(query, function (err, res) {
+//     if (err) throw err;
+//     console.log(res)
+//   });
 
-};
+// };
 
 
 // view
@@ -131,6 +405,7 @@ function removeRole() {
 
 // update
 // =====================================================
+// works need to add inquirer funct
 function updateEmployRole() {
   connection.query(
     "UPDATE employee SET role_id = ? WHERE id = ?",
@@ -149,7 +424,7 @@ function updateEmployRole() {
     }
   );
 };
-
+// works need to add inquirer funct
 function updateEmployMang() {
   connection.query(
     "UPDATE employee SET manager_id = ? WHERE id = ?",
@@ -172,100 +447,105 @@ function updateEmployMang() {
 
 // returns for inquirer (needs the most work)
 // =====================================================
-function returnRolestest() {
-  connection.query("SELECT title FROM role", function (err, res) {
-    if (err) throw err;
-
-    function test() {
-      var choiceArray = [];
-      for (var i = 0; i < returnedTitles.length; i++) {
-        choiceArray.push(returnedTitles[i].item_name);
-      }
-      console.log(choiceArray);
-    }
-    test(res);
-    // return choiceArray;
-
-    // inquirer
-    //   .prompt({
-    //     name: "choice",
-    //     type: "rawlist",
-    //     choices: function () {
-    //       var choiceArray = [];
-    //       for (var i = 0; i < res.length; i++) {
-    //         choiceArray.push(res[i].item_name);
-    //       }
-    //       return choiceArray;
-    //     },
-    //     message: "What would you like to do?",
-    //   })
-    //   .then(function (answer) {
-    //     console.log(answer)
-    //   });
-  });
-};
 
 function returnEmployees() {
-  connection.query("SELECT * FROM employee", function (err, res) {
-    if (err) throw err;
-    console.log(res)
-  });
-};
-
-function returnRoles() {
-  // query the database for all items being auctioned
-  connection.query("SELECT * FROM employee", function (err, results) {
+  connection.query("SELECT * FROM employee", function(err, results) {
     if (err) throw err;
     // once you have the items, prompt the user for which they'd like to bid on
     inquirer
       .prompt([
         {
           name: "choice",
-          type: "list",
-          choices: function () {
+          type: "rawlist",
+          choices: function() {
             var choiceArray = [];
             for (var i = 0; i < results.length; i++) {
-              choiceArray.push(results[i].item_name);
+              choiceArray.push(results[i].first_name + " " + results[i].last_name,);
             }
             return choiceArray;
           },
-          message: "What role do you want to choose?"
+          message: "Which employee?"
         }
       ])
-      .then(function (answer) {
-        // get the information of the chosen item
-        var chosenItem;
-        for (var i = 0; i < results.length; i++) {
-          if (results[i].item_name === answer.choice) {
-            chosenItem = results[i];
-          }
-        }
+      .then(function(answer) {
+        console.log(answer)
+      })
+    })
+};
 
-        // determine if bid was high enough
-        if (chosenItem.highest_bid < parseInt(answer.bid)) {
-          // bid was high enough, so update db, let the user know, and start over
-          connection.query(
-            "UPDATE auctions SET ? WHERE ?",
-            [
-              {
-                highest_bid: answer.bid
-              },
-              {
-                id: chosenItem.id
-              }
-            ],
-            function (error) {
-              if (error) throw err;
-              console.log("Bid placed successfully!");
-              start();
+function returnRoles() {
+  connection.query("SELECT * FROM role", function(err, results) {
+    if (err) throw err;
+    // once you have the items, prompt the user for which they'd like to bid on
+    inquirer
+      .prompt([
+        {
+          name: "choice",
+          type: "rawlist",
+          choices: function() {
+            var choiceArray = [];
+            for (var i = 0; i < results.length; i++) {
+              choiceArray.push(results[i].title);
             }
-          );
+            return choiceArray;
+          },
+          message: "Which role?"
         }
-        else {
-          // bid wasn't high enough, so apologize and start over
-          console.log("Your bid was too low. Try again...");
-          start();
-        }
-      });
-  });
-}
+      ])
+      .then(function(answer) {
+        console.log(answer)
+      })
+    })
+  };
+
+function returnDepart() {
+    connection.query("SELECT * FROM department", function(err, results) {
+      if (err) throw err;
+      // once you have the items, prompt the user for which they'd like to bid on
+      inquirer
+        .prompt([
+          {
+            name: "choice",
+            type: "rawlist",
+            choices: function() {
+              var choiceArray = [];
+              for (var i = 0; i < results.length; i++) {
+                choiceArray.push(results[i].title);
+              }
+              return choiceArray;
+            },
+            message: "Which department?"
+          }
+        ])
+        .then(function(answer) {
+          console.log(answer)
+        })
+      })
+  };
+
+  function returnManagers() {
+    connection.query("SELECT * FROM employee WHERE manager_id = ? ",[1], function(err, results) {
+      if (err) throw err;
+      // once you have the items, prompt the user for which they'd like to bid on
+      inquirer
+        .prompt([
+          {
+            name: "choice",
+            type: "rawlist",
+            choices: function() {
+              var choiceArray = [];
+              for (var i = 0; i < results.length; i++) {
+                choiceArray.push(results[i].first_name + " " + results[i].last_name,);
+              }
+              return choiceArray;
+            },
+            message: "Which manager?"
+          }
+        ])
+        .then(function(answer) {
+          console.log(answer)
+        })
+      })
+  };
+
+  

@@ -2,44 +2,8 @@ var inquirer = require("inquirer");
 // function which prompts the user for what action they should take
 
 
-
-// what to do?
-    // view all employees
-        // shows all the employees
-    // view all employees by dept
-        // sales
-        // financing
-        // engineering
-        // legal
-    // view all employees by manager
-    // add employee
-        // first name
-        // last name
-        // employee role
-        // employee manager
-            // gives list of all 
-    // remove employee
-        // shows all the employees
-    // update employee role
-        // sales lead
-        // salesperson
-        // lead engineer
-        // software engineer
-        // account manager
-        // accountant
-        // legal team lead
-        // lawyer
-
-    // update employee manager
-        // show all employees
-        // set the employee as the manger of someone else(removes the updated employee from the list)
-    // view all roles
-    // add role
-    // remove role
-// make sure there is a return line decribing the action has been done above
-
-
 // beginning tree
+// =====================================================
 function start() {
   inquirer
     .prompt({
@@ -120,6 +84,7 @@ function start() {
 };
 
 // add inquirers
+// =====================================================
 function inqAddEmploy() {
   inquirer
     .prompt([
@@ -179,7 +144,7 @@ function inqAddRole() {
 };
 
 // remove inquirers
-
+// =====================================================
 function inqRemoveRole() { 
   inquirer
     .prompt([
@@ -219,7 +184,7 @@ function inqRemoveEmploy() {
 }
 
 // update inquirers
-
+// =====================================================
 function inqUpdateEmployRole() {
   inquirer
     .prompt([
@@ -273,6 +238,7 @@ function inqUpdateEmployMang() {
 };
 
 // view inquirers
+// =====================================================
 function inqViewDep() {
   inquirer
     .prompt([
@@ -310,3 +276,39 @@ function inqViewMang() {
 
     });
 };
+
+
+// what to do?
+    // view all employees
+        // shows all the employees
+    // view all employees by dept
+        // sales
+        // financing
+        // engineering
+        // legal
+    // view all employees by manager
+    // add employee
+        // first name
+        // last name
+        // employee role
+        // employee manager
+            // gives list of all 
+    // remove employee
+        // shows all the employees
+    // update employee role
+        // sales lead
+        // salesperson
+        // lead engineer
+        // software engineer
+        // account manager
+        // accountant
+        // legal team lead
+        // lawyer
+
+    // update employee manager
+        // show all employees
+        // set the employee as the manger of someone else(removes the updated employee from the list)
+    // view all roles
+    // add role
+    // remove role
+// make sure there is a return line decribing the action has been done above
