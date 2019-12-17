@@ -42,6 +42,14 @@ VALUES ("Jane", "Doe" , 2 , 3), ("John", "Doe" , 3, null), ("Voltaire", "Sarte" 
 -- 3 table join
 `SELECT * FROM ((employee INNER JOIN role ON role.id = employee.role_id) INNER JOIN department ON department.id = role.department_id)`
 
+-- update role info
+
+`UPDATE employee SET role_id = '?' WHERE employee.id =''`;
+
+-- update manager info
+
+`UPDATE employee SET manager_id = '?' WHERE employee.id =''`;
+
 -- * **department**:
 
 --   * **id** - INT PRIMARY KEY
