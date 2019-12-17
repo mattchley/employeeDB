@@ -1,41 +1,18 @@
 var inquirer = require("inquirer");
 // function which prompts the user for what action they should take
 
+// 1.view all employees(x)
+// 2.view all by department(x)
+// 3.view all by manger (not connected correctly)
+// 4.add employee (cant do manger)
+// 5.remove employee (x)
+// 6.update employee role(choices)
+// 7.update manger role(choices)
+// 8.view all roles (x)
+// 9.add role (department choices)
+// 10.remove role (x)
+// 11.exit(x)
 
-// what to do?
-    // view all employees
-        // shows all the employees
-    // view all employees by dept
-        // sales
-        // financing
-        // engineering
-        // legal
-    // view all employees by manager
-    // add employee
-        // first name
-        // last name
-        // employee role
-        // employee manager
-            // gives list of all 
-    // remove employee
-        // shows all the employees
-    // update employee role
-        // sales lead
-        // salesperson
-        // lead engineer
-        // software engineer
-        // account manager
-        // accountant
-        // legal team lead
-        // lawyer
-
-    // update employee manager
-        // show all employees
-        // set the employee as the manger of someone else(removes the updated employee from the list)
-    // view all roles
-    // add role
-    // remove role
-// make sure there is a return line decribing the action has been done above
 
 // returns for inquirer (needs the most work)
 // =====================================================
@@ -127,7 +104,7 @@ function returnDepart() {
           choices: function () {
             var choiceArray = [];
             for (var i = 0; i < results.length; i++) {
-              choiceArray.push(results[i].first_name + " " + results[i].last_name);
+              choiceArray.push(results[i].name);
             }
             return choiceArray;
           },
@@ -138,4 +115,64 @@ function returnDepart() {
         console.log(answer)
       })
   })
+};
+
+
+
+function inqAddEmploy() {
+  inquirer
+    .prompt([
+      {
+        name: "firstName",
+        type: "input",
+        message: "What is their first name?",
+      },
+      {
+        name: "lastName",
+        type: "input",
+        message: "What is their last name?",
+      }
+    ]).then(
+      connection.query("SELECT * FROM role", function (err, results) {
+        if (err) throw err;
+        inquirer
+          .prompt(
+            {
+              name: "role",
+              type: "input",
+              message: "What is their role?",
+              choices: function () {
+                var choiceArray = [];
+                for (var i = 0; i < results.length; i++) {
+                  choiceArray.push(results[i].title);
+                }
+                return choiceArray;
+              }
+            }
+          )}.then(
+            inquirer
+              .prompt(
+                {
+                  name: "manager",
+                  type: "input",
+                  message: "Who manages this employee?",
+                  // choices: [
+                  //   // function that returns all employees
+                  // ]
+                }
+              )).then(function (answer) {
+                var query = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ( ?, ?, ?,? )`;
+                connection.query(query,
+                  {
+                    first_name: answer.firstName,
+                    last_name: answer.lastName,
+                    role: answer.role,
+                    manager_id: answer.manager
+                  }
+                  , function (err, res) {
+                    if (err) throw err;
+                    console.log(answer.firstName + ' ' + answer.lastName + " has been added!")
+                    start();
+                  });
+              });
 };

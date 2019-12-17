@@ -22,6 +22,19 @@ connection.connect(function (err) {
   start();
 });
 
+// whats working
+// 1.view all employees(x)
+// 2.view all by department(x)
+// 3.view all by manger (not connected correctly)
+// 4.add employee (cant do manger)
+// 5.remove employee (x)
+// 6.update employee role(choices work but now no answer?)
+// 7.update manger role(choices work but manager issue)
+// 8.view all roles (x)
+// 9.add role (department choices)
+// 10.remove role (x)
+// 11.exit(x)
+
 // inquirer functions
 // =====================================================
 
@@ -34,17 +47,18 @@ function start() {
       type: "rawlist",
       message: "What would you like to do?",
       choices: [
-        "View all employees",
+        // "View all employees",
         "View all employees by department",
         "View all employees by manager",
         "Add employee",
-        "Remove employee",
+        // "Remove employee",
         "Update employee role",
         "Update employee manager",
-        "View all roles",
+        // "View all roles",
         "Add role",
-        "Remove role",
-        "Exit"]
+        // "Remove role",
+        // "Exit"
+      ]
     })
     .then(function (answer) {
       switch (answer.action) {
@@ -109,6 +123,8 @@ function start() {
 // add inquirers
 // =====================================================
 function inqAddEmploy() {
+  connection.query("SELECT * FROM role", function (err, results) {
+    if (err) throw err;
   inquirer
     .prompt([
       {
@@ -123,18 +139,15 @@ function inqAddEmploy() {
       },
       {
         name: "role",
-        type: "input",
+        type: "rawlist",
         message: "What is their role?",
-        // choices: [
-        // ]
-      },
-      {
-        name: "manager",
-        type: "input",
-        message: "Who manages this employee?",
-        // choices: [
-        //   // function that returns all employees
-        // ]
+        choices: function () {
+          var choiceArray = [];
+          for (var i = 0; i < results.length; i++) {
+            choiceArray.push(results[i].title);
+          }
+          return choiceArray;
+        }
       },
 
     ])
@@ -144,7 +157,7 @@ function inqAddEmploy() {
         {
           first_name: answer.firstName,
           last_name: answer.lastName,
-          role: answer.role,
+          role_id: answer.role,
           manager_id: answer.manager
         }
         , function (err, res) {
@@ -153,39 +166,48 @@ function inqAddEmploy() {
           start();
         });
     });
-};
+  })};
 
 function inqAddRole() {
-  inquirer
-    .prompt([
-      {
-        name: "newRole",
-        type: "input",
-        message: "What is role would you like to add?",
-      },
-      {
-        name: "amount",
-        type: "input",
-        message: "How much do they make?",
-      },
-      {
-        name: "department",
-        type: "input",
-        message: "Which department do they belong to?",
-      },
-    ])
-    .then(function (answer) {
-      var query = `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ? )`;
-      connection.query(query, {
-        title: answer.newRole,
-        salary: answer.amount,
-        department_id: answer.department,
-      }, function (err, res) {
-        if (err) throw err;
-        console.log(answer.newRole + "has been added!")
-        start();
+  connection.query("SELECT * FROM department", function (err, results) {
+    if (err) throw err;
+    inquirer
+      .prompt([
+        {
+          name: "newRole",
+          type: "input",
+          message: "What is role would you like to add?",
+        },
+        {
+          name: "amount",
+          type: "input",
+          message: "How much do they make?",
+        },
+        {
+          name: "department",
+          type: "rawlist",
+          choices: function () {
+            var choiceArray = [];
+            for (var i = 0; i < results.length; i++) {
+              choiceArray.push(results[i].name);
+            }
+            return choiceArray;
+          },
+          message: "Which department?"
+        }
+      ]).then(function (answer) {
+        var query = `INSERT INTO role (title, salary, department_id) VALUES (?)`;
+        connection.query(query, {
+          title: answer.newRole,
+          salary: answer.amount,
+          department_id: answer.department,
+        }, function (err, res) {
+          if (err) throw err;
+          console.log(answer.newRole + "has been added!")
+          start();
+        });
       });
-    });
+  });
 };
 
 // remove inquirers
@@ -257,6 +279,8 @@ function inqRemoveEmploy() {
 // update inquirers
 // =====================================================
 function inqUpdateEmployRole() {
+  
+  connection.query(`SELECT * FROM (employee INNER JOIN role ON employee.id = role.id)`, function (err, results) {
   inquirer
     .prompt([
 
@@ -264,15 +288,25 @@ function inqUpdateEmployRole() {
         name: "updateEmployee",
         type: "rawlist",
         message: "Which employee would you like to update?",
-        // choices: [
-        // ]
+        choices: function () {
+          var choiceArray = [];
+          for (var i = 0; i < results.length; i++) {
+            choiceArray.push(results[i].first_name + " " + results[i].last_name);
+          }
+          return choiceArray;
+        }
       },
       {
         name: "updateRole",
         type: "rawlist",
         message: "What is there role?",
-        // choices: [
-        // ]
+        choices: function () {
+          var choiceArray = [];
+          for (var i = 0; i < results.length; i++) {
+            choiceArray.push(results[i].title);
+          }
+          return choiceArray;
+        }
       }
 
     ])
@@ -295,9 +329,10 @@ function inqUpdateEmployRole() {
       );
 
     });
-};
+})};
 
 function inqUpdateEmployMang() {
+  connection.query(`SELECT * FROM employee`, function (err, results) {
   inquirer
     .prompt([
 
@@ -305,15 +340,25 @@ function inqUpdateEmployMang() {
         name: "updateEmployee",
         type: "rawlist",
         message: "Which employee would you like to update?",
-        // choices: [
-        // ]
+        choices: function () {
+          var choiceArray = [];
+          for (var i = 0; i < results.length; i++) {
+            choiceArray.push(results[i].first_name + " " + results[i].last_name);
+          }
+          return choiceArray;
+        }
       },
       {
         name: "updateManger",
         type: "rawlist",
         message: "Who is their manager?",
-        // choices: [
-        // ]
+        choices: function () {
+          var choiceArray = [];
+          for (var i = 0; i < results.length; i++) {
+            choiceArray.push(results[i].manager_id);
+          }
+          return choiceArray;
+        }
       }
 
     ])
@@ -336,7 +381,7 @@ function inqUpdateEmployMang() {
       );
 
     });
-};
+})};
 
 // view inquirers
 // =====================================================
@@ -352,7 +397,7 @@ function inqViewDep() {
           choices: function () {
             var choiceArray = [];
             for (var i = 0; i < results.length; i++) {
-              choiceArray.push(results[i].first_name + " " + results[i].last_name);
+              choiceArray.push(results[i].name);
             }
             return choiceArray;
           },
@@ -428,28 +473,3 @@ function viewRoles() {
 function exit() {
   connection.end()
 }
-
-function returnEmployees() {
-  connection.query("SELECT * FROM employee", function (err, results) {
-    if (err) throw err;
-    // once you have the items, prompt the user for which they'd like to bid on
-    inquirer
-      .prompt([
-        {
-          name: "choice",
-          type: "rawlist",
-          choices: function () {
-            var choiceArray = [];
-            for (var i = 0; i < results.length; i++) {
-              choiceArray.push(results[i].first_name + " " + results[i].last_name);
-            }
-            return choiceArray;
-          },
-          message: "Which employee?"
-        }
-      ])
-      .then(function (answer) {
-        console.log(answer)
-      })
-  })
-};
