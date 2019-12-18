@@ -216,11 +216,11 @@ function updateEmployRole() {
                     type: "rawlist",
                     message: "Which employee would you like to update?",
                     choices: function () {
-                        var choiceArray = [];
+                        var choiceEmploy = [];
                         for (var i = 0; i < results.length; i++) {
-                            choiceArray.push(results[i].first_name + " " + results[i].last_name);
+                            choiceEmploy.push(results[i].first_name + " " + results[i].last_name);
                         }
-                        return choiceArray;
+                        return choiceEmploy;
                     }
                 },
                 {
@@ -228,37 +228,39 @@ function updateEmployRole() {
                     type: "rawlist",
                     message: "What is there role?",
                     choices: function () {
-                        var choiceArray = [];
+                        var choiceRole = [];
                         for (var i = 0; i < results.length; i++) {
-                            choiceArray.push(results[i].title);
+                            choiceRole.push(results[i].title);
                         }
-                        return choiceArray;
+                        return choiceRole;
                     }
                 }
 
             ])
             .then(function (answer) {
 
-                var chosenItem;
+                var chosenEmploy;
                 for (var i = 0; i < results.length; i++) {
-                    if (results[i].title === answer.choice) {
-                        chosenItem = results[i];
+                    if (results[i].id === answer.choice) {
+                        chosenEmploy = results[i];
                     }
                 }
-                //   connection.query(
-                //     "UPDATE employee SET ? WHERE ?",
-                //     [
-                //         {answer.updateRole},
-                //     {answer.updateEmployee}
-                // ]
 
-                //     ,
-                //     function (error) {
-                //       if (error) throw err;
-                //       console.log("Role successfully changed!");
-                //       start();
-                //     }
-                //   );
+                var chosenRole;
+                for (var i = 0; i < results.length; i++) {
+                    if (results[i].title === answer.choice) {
+                        chosenRole = results[i];
+                    }
+                }
+                  connection.query(
+                    "UPDATE employee SET ? WHERE ?",
+                    [{title : chosenRole}, {id : chosenEmploy}],
+                    function (error) {
+                      if (error) throw err;
+                      console.log("Role successfully changed!");
+                      start();
+                    }
+                  );
 
             });
     })
