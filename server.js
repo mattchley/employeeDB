@@ -48,7 +48,7 @@ function start() {
       message: "What would you like to do?",
       choices: [
         // "View all employees",
-        "View all employees by department",
+        // "View all employees by department",
         "View all employees by manager",
         "Add employee",
         // "Remove employee",
@@ -125,48 +125,56 @@ function start() {
 function inqAddEmploy() {
   connection.query("SELECT * FROM role", function (err, results) {
     if (err) throw err;
-  inquirer
-    .prompt([
-      {
-        name: "firstName",
-        type: "input",
-        message: "What is their first name?",
-      },
-      {
-        name: "lastName",
-        type: "input",
-        message: "What is their last name?",
-      },
-      {
-        name: "role",
-        type: "rawlist",
-        message: "What is their role?",
-        choices: function () {
-          var choiceArray = [];
-          for (var i = 0; i < results.length; i++) {
-            choiceArray.push(results[i].title);
-          }
-          return choiceArray;
-        }
-      },
-
-    ])
-    .then(function (answer) {
-      var query = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ( ?, ?, ?,? )`;
-      connection.query(query,
+    inquirer
+      .prompt([
         {
-          first_name: answer.firstName,
-          last_name: answer.lastName,
-          role_id: answer.role,
-          manager_id: answer.manager
+          name: "firstName",
+          type: "input",
+          message: "What is their first name?",
+        },
+        {
+          name: "lastName",
+          type: "input",
+          message: "What is their last name?",
+        },
+        {
+          name: "role",
+          type: "rawlist",
+          message: "What is their role?",
+          choices: function () {
+            var choiceArray = [];
+            for (var i = 0; i < results.length; i++) {
+              choiceArray.push(results[i].title);
+            }
+            return choiceArray;
+          }
+        },
+
+      ])
+      .then(function (answer) {
+        var chosenItem;
+        for (var i = 0; i < results.length; i++) {
+          if (results[i].title === answer.choice) {
+            chosenItem = results[i];
+          }
         }
-        , function (err, res) {
-          if (err) throw err;
-          console.log(answer.firstName + ' ' + answer.lastName + " has been added!")
-          start();
-        });
-    });
-  })};
+        console.log(answer)
+        // var query = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ( ?, ?, ?, ? )`;
+        // connection.query(query,
+        //   {
+        //     first_name : answer.firstName,
+        //     last_name : answer.lastName,
+        //     role_id : chosenItem.id,
+        //     manager_id : null
+        // }
+        //   , function (err, res) {
+        //     if (err) throw err;
+        //     console.log(answer.firstName + ' ' + answer.lastName + " has been added!")
+        //     start();
+        //   });
+      });
+  })
+};
 
 function inqAddRole() {
   connection.query("SELECT * FROM department", function (err, results) {
@@ -196,8 +204,7 @@ function inqAddRole() {
           message: "Which department?"
         }
       ]).then(function (answer) {
-        var query = `INSERT INTO role (title, salary, department_id) VALUES (?)`;
-        connection.query(query, {
+        connection.query("INSERT INTO role (title, salary, department_id) VALUES (?)", {
           title: answer.newRole,
           salary: answer.amount,
           department_id: answer.department,
@@ -279,109 +286,106 @@ function inqRemoveEmploy() {
 // update inquirers
 // =====================================================
 function inqUpdateEmployRole() {
-  
-  connection.query(`SELECT * FROM (employee INNER JOIN role ON employee.id = role.id)`, function (err, results) {
-  inquirer
-    .prompt([
 
-      {
-        name: "updateEmployee",
-        type: "rawlist",
-        message: "Which employee would you like to update?",
-        choices: function () {
-          var choiceArray = [];
-          for (var i = 0; i < results.length; i++) {
-            choiceArray.push(results[i].first_name + " " + results[i].last_name);
-          }
-          return choiceArray;
-        }
-      },
-      {
-        name: "updateRole",
-        type: "rawlist",
-        message: "What is there role?",
-        choices: function () {
-          var choiceArray = [];
-          for (var i = 0; i < results.length; i++) {
-            choiceArray.push(results[i].title);
-          }
-          return choiceArray;
-        }
-      }
+  connection.query(`SELECT * FROM (employee INNER JOIN role ON employee.role_id = role.id)`, function (err, results) {
+    inquirer
+      .prompt([
 
-    ])
-    .then(function (answer) {
-      connection.query(
-        "UPDATE employee SET role_id = ? WHERE id = ?",
-        [
-          {
-            role_id: answer.updateRole
-          },
-          {
-            id: answer.updateEmployee
+        {
+          name: "updateEmployee",
+          type: "rawlist",
+          message: "Which employee would you like to update?",
+          choices: function () {
+            var choiceArray = [];
+            for (var i = 0; i < results.length; i++) {
+              choiceArray.push(results[i].first_name + " " + results[i].last_name);
+            }
+            return choiceArray;
           }
-        ],
-        function (error) {
-          if (error) throw err;
-          console.log("Role successfully changed!");
-          start();
+        },
+        {
+          name: "updateRole",
+          type: "rawlist",
+          message: "What is there role?",
+          choices: function () {
+            var choiceArray = [];
+            for (var i = 0; i < results.length; i++) {
+              choiceArray.push(results[i].title);
+            }
+            return choiceArray;
+          }
         }
-      );
 
-    });
-})};
+      ])
+      .then(function (answer) {
+        connection.query(
+          "UPDATE employee SET role_id = ? WHERE id = ?",
+          [answer.updateRole
+            ,
+          answer.updateEmployee]
+
+          ,
+          function (error) {
+            if (error) throw err;
+            console.log("Role successfully changed!");
+            start();
+          }
+        );
+
+      });
+  })
+};
 
 function inqUpdateEmployMang() {
   connection.query(`SELECT * FROM employee`, function (err, results) {
-  inquirer
-    .prompt([
+    inquirer
+      .prompt([
 
-      {
-        name: "updateEmployee",
-        type: "rawlist",
-        message: "Which employee would you like to update?",
-        choices: function () {
-          var choiceArray = [];
-          for (var i = 0; i < results.length; i++) {
-            choiceArray.push(results[i].first_name + " " + results[i].last_name);
+        {
+          name: "updateEmployee",
+          type: "rawlist",
+          message: "Which employee would you like to update?",
+          choices: function () {
+            var choiceArray = [];
+            for (var i = 0; i < results.length; i++) {
+              choiceArray.push(results[i].first_name + " " + results[i].last_name);
+            }
+            return choiceArray;
           }
-          return choiceArray;
-        }
-      },
-      {
-        name: "updateManger",
-        type: "rawlist",
-        message: "Who is their manager?",
-        choices: function () {
-          var choiceArray = [];
-          for (var i = 0; i < results.length; i++) {
-            choiceArray.push(results[i].manager_id);
+        },
+        {
+          name: "updateManger",
+          type: "rawlist",
+          message: "Who is their manager?",
+          choices: function () {
+            var choiceArray = [];
+            for (var i = 0; i < results.length; i++) {
+              choiceArray.push(results[i].manager_id);
+            }
+            return choiceArray;
           }
-          return choiceArray;
         }
-      }
 
-    ])
-    .then(function (answer) {
-      connection.query(
-        "UPDATE employee SET role_id = ? WHERE id = ?",
-        [
+      ])
+      .then(function (answer) {
+        connection.query(
+          "UPDATE employee SET role_id = ? WHERE id = ?",
           {
             role_id: answer.updateRole
-          },
-          {
+            ,
             id: answer.updateEmployee
           }
-        ],
-        function (error) {
-          if (error) throw err;
-          console.log("Role successfully changed!");
-          start();
-        }
-      );
+          ,
+          function (error) {
+            if (error) throw err;
+            console.log("Role successfully changed!");
+            start();
+          }
+        );
 
-    });
-})};
+      });
+  })
+};
 
 // view inquirers
 // =====================================================

@@ -1,17 +1,56 @@
 var inquirer = require("inquirer");
 // function which prompts the user for what action they should take
 
-// 1.view all employees(x)
-// 2.view all by department(x)
-// 3.view all by manger (not connected correctly)
-// 4.add employee (cant do manger)
-// 5.remove employee (x)
-// 6.update employee role(choices)
-// 7.update manger role(choices)
-// 8.view all roles (x)
-// 9.add role (department choices)
-// 10.remove role (x)
-// 11.exit(x)
+adds department, roles, employees
+unction inqAddEmploy() {
+  connection.query("SELECT * FROM role", function (err, results) {
+    if (err) throw err;
+    inquirer
+      .prompt([
+        {
+          name: "firstName",
+          type: "input",
+          message: "What is their first name?",
+        },
+        {
+          name: "lastName",
+          type: "input",
+          message: "What is their last name?",
+        },
+        {
+          name: "role",
+          type: "rawlist",
+          message: "What is their role?",
+          choices: function () {
+            var choiceArray = [];
+            for (var i = 0; i < results.length; i++) {
+              choiceArray.push(results[i].title);
+            }
+            return choiceArray;
+          }
+        },
+
+      ])
+      .then(function (answer) {
+        var query = "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ( ?, ?, ?, null )";
+        connection.query(query,
+          {
+            first_name: answer.firstName,
+            last_name: answer.lastName,
+            role_id: answer.role,
+            manager_id: answer.manager
+          }
+          , function (err, res) {
+            if (err) throw err;
+            console.log(answer.firstName + ' ' + answer.lastName + " has been added!")
+            start();
+          });
+      });
+  })
+};
+
+view by department, roles, employees
+update employee roles
 
 
 // returns for inquirer (needs the most work)
