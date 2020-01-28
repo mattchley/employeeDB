@@ -185,18 +185,19 @@ function inqAddEmploy() {
                 type: "input",
                 message: "what is the role id? (numbers)"
             },
-            {
-                name: "manager",
-                type: "input",
-                message: "What is their manager id? (numbers)?"
-            },
+            // {
+            //     name: "manager",
+            //     type: "input",
+            //     message: "What is their manager id? (numbers)?"
+            // },
         ]).then(function (answer) {
-            connection.query("INSERT INTO employee SET ?",
+            console.log(answer.firstName)
+            connection.query("INSERT INTO employee SET ?, ?, ?, ?",
                 [
                     { first_name: answer.firstName },
                     { last_name: answer.lastName },
                     { role_id: answer.role },
-                    { manager_id: answer.manager }
+                    { manager_id: null }
                 ],
                 function (err, res) {
                     if (err) throw err;
